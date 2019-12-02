@@ -51,7 +51,7 @@ public class PhoenixUtil {
         return false;
     }
 
-    //显示通知栏
+    //创建通知栏
     public static Notification createNotification(@NonNull Context context) {
 
         PackageManager packageManager = context.getPackageManager();

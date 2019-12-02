@@ -16,12 +16,9 @@ import com.cj.phoenix.config.Config;
  */
 public class N_WorkService extends JobService {
 
-
     @Override
     public void onCreate() {
         super.onCreate();
-        //showNotify();
-
     }
 
     @Override

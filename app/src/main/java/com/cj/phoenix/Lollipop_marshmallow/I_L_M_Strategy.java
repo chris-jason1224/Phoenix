@@ -4,7 +4,7 @@ import android.content.Context;
 import com.cj.phoenix.core.IBaseStrategy;
 
 /**
- * Package:com.cj.phoenix.Lollipop$marshmallow
+ * Package:com.cj.phoenix.Lollipop_marshmallow
  */
 public interface I_L_M_Strategy extends IBaseStrategy {
 
