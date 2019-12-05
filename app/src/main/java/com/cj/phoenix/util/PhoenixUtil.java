@@ -12,13 +12,17 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
+import androidx.core.app.TaskStackBuilder;
 
 import com.cj.phoenix.BuildConfig;
 import com.cj.phoenix.R;
 
 import java.util.List;
+
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static androidx.core.app.NotificationCompat.BADGE_ICON_SMALL;
 import static com.cj.phoenix.config.Config.TAG;
 import static com.cj.phoenix.config.Config.phoenix_channelId;
 import static com.cj.phoenix.config.Config.phoenix_channelName;
@@ -81,10 +85,17 @@ public class PhoenixUtil {
                 .setWhen(System.currentTimeMillis()).
                 setAutoCancel(false);
 
+        /**
+         * 可能触发浮动通知的示例条件包括：
+         * 用户的 Activity 处于全屏模式（应用使用 fullScreenIntent）。
+         * 通知具有高优先级，并在运行 Android 7.1（API 级别 25）及更低版本的设备上使用铃声或振动。
+         * 通知渠道在运行 Android 8.0（API 级别 26）及更高版本的设备上具有很高的重要程度。
+         */
+
         //调用这个方法把服务设置成前台服务
         //8.0之上必须设置channel
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(phoenix_channelId, phoenix_channelName, NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel notificationChannel = new NotificationChannel(phoenix_channelId, phoenix_channelName, NotificationManager.IMPORTANCE_NONE);
             notificationChannel.enableLights(false);
             notificationChannel.enableVibration(false);
             notificationChannel.setShowBadge(false);//不显示角标
@@ -94,23 +105,25 @@ public class PhoenixUtil {
             builder.setChannelId(phoenix_channelId);
         }
 
+
         Notification notification = builder.build();
-        notification.defaults = Notification.DEFAULT_SOUND; //设置为默认的声音
+        notification.defaults = Notification.BADGE_ICON_NONE; //不要铃声
         notification.flags = Notification.FLAG_FOREGROUND_SERVICE | Notification.FLAG_ONGOING_EVENT;
         return notification;
 
     }
 
-    public static void log_e(String msg){
-        if(BuildConfig.DEBUG){
-            Log.e(TAG,msg);
+    public static void log_e(String msg) {
+        if (BuildConfig.DEBUG) {
+            Log.e(TAG, msg);
         }
     }
 
-    public static void log_w(String msg){
-        if(BuildConfig.DEBUG){
-            Log.w(TAG,msg);
+    public static void log_w(String msg) {
+        if (BuildConfig.DEBUG) {
+            Log.w(TAG, msg);
         }
     }
+
 
 }
