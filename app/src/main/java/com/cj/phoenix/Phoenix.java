@@ -3,11 +3,13 @@ package com.cj.phoenix;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Parcel;
 
 import androidx.annotation.NonNull;
 
 import com.cj.phoenix.Lollipop_marshmallow.L_M_WorkStrategy;
 import com.cj.phoenix.Nougat.N_Strategy;
+import com.cj.phoenix.core.IExecute;
 import com.cj.phoenix.util.PhoenixUtil;
 import com.cj.phoenix.service.RunningForegroundService;
 import com.cj.phoenix.service.SilentMusicLoopService;
@@ -152,6 +154,24 @@ public class Phoenix {
         }
 
     }
+
+    private IExecute execute = new IExecute() {
+        @Override
+        public void exec() {
+
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+
+        }
+    };
+
 
 
 }
