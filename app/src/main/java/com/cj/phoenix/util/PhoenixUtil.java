@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -60,24 +61,22 @@ public class PhoenixUtil {
 
         PackageManager packageManager = context.getPackageManager();
         String pkgName = context.getPackageName();
-
-        Class clz = null;
-        if (packageManager != null) {
-            Intent intent = packageManager.getLaunchIntentForPackage(pkgName);
-            ComponentName componentName = intent.getComponent();
-            if (componentName != null) {
-                clz = componentName.getClass();
-            }
-        }
-
-        if (clz == null) {
+        if(packageManager==null || TextUtils.isEmpty(pkgName)){
             return null;
         }
 
-        Notification.Builder builder = new Notification.Builder(context.getApplicationContext());
-        Intent nfIntent = new Intent(context, clz);
+        //获取启动intent
+        Intent launcherIntent = packageManager.getLaunchIntentForPackage(pkgName);
+        if(launcherIntent!=null){
+            ComponentName componentName = launcherIntent.getComponent();
+            if(componentName==null || TextUtils.isEmpty(componentName.getClassName())){
+                return null;
+            }
+        }
 
-        builder.setContentIntent(PendingIntent.getActivity(context, 0, nfIntent, 0))
+        Notification.Builder builder = new Notification.Builder(context.getApplicationContext());
+
+        builder.setContentIntent(PendingIntent.getActivity(context, 0, launcherIntent, 0))
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.icon_phoenix_large))
                 .setSmallIcon(R.mipmap.icon_phoenix_small)
                 .setContentTitle("Phoenix")
