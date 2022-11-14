@@ -1,5 +1,8 @@
 # Phoenix
 
+#new
+        支持5s以下周期任务
+
 #Useage
     
       Phoenix.getInstance().keepAlive();
