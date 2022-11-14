@@ -12,4 +12,5 @@ public interface I_N_Strategy {
 
     void stopWork();
 
+    void onInterval();
 }

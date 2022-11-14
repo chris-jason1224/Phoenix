@@ -28,8 +28,7 @@ public class N_WorkService extends JobService {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                //todo do your background job period there
-
+                N_Strategy.getInstance().timePlus(System.currentTimeMillis());
                 //重启service
                 if(N_Strategy.getInstance().isNeedReschedule()){
                     N_Strategy.getInstance().initScheduler();

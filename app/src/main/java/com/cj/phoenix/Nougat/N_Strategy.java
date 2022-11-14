@@ -4,8 +4,11 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
+
 import com.cj.phoenix.Nougat.job.N_WorkService;
+import com.cj.phoenix.Phoenix;
 import com.cj.phoenix.config.Config;
+import com.cj.phoenix.util.PhoenixUtil;
 
 
 /**
@@ -16,6 +19,7 @@ public class N_Strategy implements I_N_Strategy {
     private Context mContext;
     private JobScheduler mScheduler;
     private JobInfo jobInfo;
+    private volatile long timeBase;
 
     //是否需要循环执行
     private boolean needReschedule = false;
@@ -47,11 +51,18 @@ public class N_Strategy implements I_N_Strategy {
     public void stopWork() {
         needReschedule = false;
         mScheduler.cancelAll();
+        timeBase = 0;
+    }
+
+    //定时任务回调接口
+    @Override
+    public void onInterval() {
+        PhoenixUtil.log_e("OnInterval ---");
     }
 
     public void initScheduler() {
 
-        if(mScheduler==null){
+        if (mScheduler == null) {
             mScheduler = (JobScheduler) mContext.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         }
 
@@ -66,10 +77,11 @@ public class N_Strategy implements I_N_Strategy {
         jBuilder.setRequiresCharging(false);
         //任务只有当用户没有在使用该设备且有一段时间没有使用时才会启动该任务
         jBuilder.setRequiresDeviceIdle(false);
+        //最小和最大延迟都设置为0，保证任务立刻开始
         //通过最小延迟时间绕过最小15分钟间隔限制
-        jBuilder.setMinimumLatency(Config.period);
+        jBuilder.setMinimumLatency(0L);
         //设置最大延迟执行时间
-        jBuilder.setOverrideDeadline(Config.period);
+        jBuilder.setOverrideDeadline(0L);
         //设置退避/重试策略
         jBuilder.setBackoffCriteria(3000, JobInfo.BACKOFF_POLICY_LINEAR);
 
@@ -77,6 +89,17 @@ public class N_Strategy implements I_N_Strategy {
         mScheduler.schedule(jobInfo);
     }
 
+    public synchronized void timePlus(Long now) {
+        if (timeBase == 0L) {
+            timeBase = now;
+            return;
+        }
 
+        if (now - timeBase >= Config.period) {
+            N_Strategy.getInstance().onInterval();
+            timeBase = 0L;
+        }
+
+    }
 
 }

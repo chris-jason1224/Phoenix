@@ -15,7 +15,7 @@ public class Config {
     public static final int MSG_ON_STOP = 20;
 
     //保活服务后台运行周期
-    public static long period = 5 * 1000;
+    public static long period = 2000L;
 
     //JobService id
     public static int jobID = 9001;
